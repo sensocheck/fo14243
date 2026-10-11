@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia Técnico e Mapas Mentais de SSO - Sistema Integrado</title>
+  <style>
+    :root {
+      --primary-navy: #0b1a30;
+      --secondary-navy: #1a365d;
+      --accent-cyan: #06b6d4;
+      --bg-page: #07111e;
+      --card-bg: #0f1e36;
+      --card-border: #1e3a5f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      padding-bottom: 60px;
+    }
+
+    /* Topo Corporativo */
+    .topbar {
+      background-color: var(--primary-navy);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .topbar-titles h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .topbar-titles span {
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent-cyan);
+      color: #0b1a30;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    /* Seção de Introdução */
+    .hero-banner {
+      background: linear-gradient(135deg, #0f1e36 0%, #162a4a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-text h2 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+
+    .hero-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      max-width: 800px;
+    }
+
+    /* Filtros Rápidos (Pills) */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .filter-pill {
+      background: #0f1e36;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--accent-cyan);
+      color: #0b1a30;
+      border-color: var(--accent-cyan);
+    }
+
+    /* Grid dos Mapas Mentais */
+    .maps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .map-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .map-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-cyan);
+    }
+
+    .map-img-wrapper {
+      position: relative;
+      height: 220px;
+      background: #07111e;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .map-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .map-img-wrapper:hover img {
+      transform: scale(1.04);
+    }
+
+    .map-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(11, 26, 48, 0.85);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .map-expand-hint {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #ffffff;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .map-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .map-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .map-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 12px;
+      flex: 1;
+    }
+
+    .map-checklist-link {
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      background: rgba(6, 182, 212, 0.1);
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: 1px dashed rgba(6, 182, 212, 0.3);
+    }
+
+    /* Modal de Zoom / Tela Cheia */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.94);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: -38px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .modal-title-bar {
+      margin-top: 10px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topo -->
+  <header class="topbar">
+    <div class="topbar-titles">
+      <h1>Central de Guias Técnicos & Mindmaps</h1>
+      <span>Treinamento, Critérios de Inspeção e Diretrizes Operacionais (FO14243)</span>
+    </div>
+    <a href="index.html" class="nav-btn">← Voltar ao Checklist</a>
+  </header>
+
+  <main class="container">
+    
+    <!-- Banner Explicativo -->
+    <section class="hero-banner">
+      <div class="hero-text">
+        <h2>Manual de Critérios para Tomada de Decisão em Auditoria</h2>
+        <p>
+          Consulte os mapas mentais normativos como diretriz técnica para embasar apontamentos e julgamentos de campo. 
+          Cada guia estabelece os parâmetros regulatórios das NRs e legislações vigentes, padronizando a classificação de conformidade (C / NC) e orientando a adoção de ações corretivas imediatas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Barra de Filtros por Categoria -->
+    <div class="filter-bar">
+      <button class="filter-pill active" onclick="filtrarCategoria('todos', this)">Todos os Guias (8)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('processo', this)">Fluxo de Decisão (C/NC)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr23', this)">NR-23 (Incêndio & Brigada)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr12', this)">NR-12 (Máquinas)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr10', this)">NR-10 (Elétrica)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr11', this)">NR-11 (Movimentação)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr8', this)">NR-08 (Edificações)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr26', this)">NR-26 & ISOs (Químicos)</button>
+      <button class="filter-pill" onclick="filtrarCategoria('nr6', this)">NR-06 (EPIs)</button>
+    </div>
+
+    <!-- Grade de Cards de Mapas Mentais -->
+    <div class="maps-grid">
+
+      <!-- 1. Fluxo de Decisão do Auditor -->
+      <article class="map-card" data-cat="processo">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'Fluxo de Decisão do Auditor: C, NC e Evidências')">
+          <span class="map-tag">Processo</span>
+          <img src="img/cb69314f-23d7-4dd8-96d8-cd8f532e9461.png" 
+               data-basename="cb69314f-23d7-4dd8-96d8-cd8f532e9461"
+               onerror="tratarErroImagem(this)" 
+               alt="Fluxo de Decisão do Auditor">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">Fluxo de Decisão da Auditoria</h3>
+          <p class="map-desc">Árvore lógica que orienta o inspetor a classificar o item como Conforme (C) ou Não Conforme (NC), fotografar a evidência com carimbo e abrir o plano de ação imediato.</p>
+          <div class="map-checklist-link">Itens de Verificação: Regra Geral FO14243</div>
+        </div>
+      </article>
+
+      <!-- 2. NR-23 e ITs SP -->
+      <article class="map-card" data-cat="nr23">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-23: Proteção Contra Incêndio & ITs Bombeiros SP')">
+          <span class="map-tag">NR-23 / IT 17</span>
+          <img src="img/0e71c912-c3be-4322-8482-451dfe93a68c.png" 
+               data-basename="0e71c912-c3be-4322-8482-451dfe93a68c"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-23 e IT Bombeiros">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-23 & Instruções Técnicas (CBPMESP)</h3>
+          <p class="map-desc">Critérios de inspeção para extintores (IT 21), hidrantes e mangotinhos (IT 22), rotas de fuga com barras antipânico (IT 11) e dimensionamento da Brigada de Incêndio (IT 17).</p>
+          <div class="map-checklist-link">Checklist: Itens 1.1 até 1.20</div>
+        </div>
+      </article>
+
+      <!-- 3. NR-12 -->
+      <article class="map-card" data-cat="nr12">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-12: Segurança em Máquinas e Equipamentos')">
+          <span class="map-tag">NR-12</span>
+          <img src="img/68bf793e-66f5-4ab2-a7b3-4f1252c9d467.png" 
+               data-basename="68bf793e-66f5-4ab2-a7b3-4f1252c9d467"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-12 Máquinas">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-12: Máquinas e Equipamentos</h3>
+          <p class="map-desc">Proteções móveis intertravadas, barreiras físicas em transmissões de força, paradas de emergência desobstruídas, plataformas seguras e procedimento de bloqueio LOTO.</p>
+          <div class="map-checklist-link">Checklist: Itens 2.1 até 2.15</div>
+        </div>
+      </article>
+
+      <!-- 4. NR-10 -->
+      <article class="map-card" data-cat="nr10">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-10: Segurança em Instalações e Serviços em Eletricidade')">
+          <span class="map-tag">NR-10</span>
+          <img src="img/92520316-8bbb-43c4-9363-23fb40e76881.png" 
+               data-basename="92520316-8bbb-43c4-9363-23fb40e76881"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-10 Elétrica">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-10: Segurança em Eletricidade</h3>
+          <p class="map-desc">Quadros e painéis CCM trancados e sinalizados, perímetro de recuo de 1 metro livre, aterramento elétrico visível, ausência de fios expostos e EPIs retardantes a chama.</p>
+          <div class="map-checklist-link">Checklist: Itens 4.1 até 4.10</div>
+        </div>
+      </article>
+
+      <!-- 5. NR-11 -->
+      <article class="map-card" data-cat="nr11">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-11: Transporte, Movimentação e Armazenagem')">
+          <span class="map-tag">NR-11</span>
+          <img src="img/watermarked_img_2684681524139949558.png" 
+               data-basename="watermarked_img_2684681524139949558"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-11 Movimentação">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-11: Movimentação e Armazenagem</h3>
+          <p class="map-desc">Capacitação de operadores de empilhadeiras, checklists pré-uso diários, demarcação e desobstrução de faixas de trânsito, amarração de pilhas e inspeção de acessórios de içamento.</p>
+          <div class="map-checklist-link">Checklist: Itens 3.1 até 3.13</div>
+        </div>
+      </article>
+
+      <!-- 6. NR-08 -->
+      <article class="map-card" data-cat="nr8">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-08: Edificações e Estruturas Prediais')">
+          <span class="map-tag">NR-08</span>
+          <img src="img/4115f9cc-b00c-454c-96bd-821943bb287b.png" 
+               data-basename="4115f9cc-b00c-454c-96bd-821943bb287b"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-08 Edificações">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-08: Edificações Industriais</h3>
+          <p class="map-desc">Superfícies de piso niveladas, grelhas e canaletas encaixadas, escadas fixas com piso antiderrapante e corrimão contínuo, integridade de telhados e forros contra intempéries.</p>
+          <div class="map-checklist-link">Checklist: Itens 5.1 até 5.9</div>
+        </div>
+      </article>
+
+      <!-- 7. NR-26 & Normas ISO -->
+      <article class="map-card" data-cat="nr26">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-26 & ISOs: Segurança Química e Sinalização')">
+          <span class="map-tag">NR-26 / ISOs</span>
+          <img src="img/Gemini_Generated_Image_vuvb6zvuvb6zvuvb.png" 
+               data-basename="Gemini_Generated_Image_vuvb6zvuvb6zvuvb"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-26 e Normas ISO">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-26 & Normas ISO (7010 / 14001 / 45001)</h3>
+          <p class="map-desc">Rotulagem GHS obrigatória em fracionados, acesso à FISPQ/FDS, bacias de contenção secas e funcionais (ISO 14001) e testes periódicos de chuveiros lava-olhos (ISO 45001).</p>
+          <div class="map-checklist-link">Checklist: Itens 6.1 até 6.12</div>
+        </div>
+      </article>
+
+      <!-- 8. NR-06 -->
+      <article class="map-card" data-cat="nr6">
+        <div class="map-img-wrapper" onclick="abrirModal(this, 'NR-06: Equipamentos de Proteção Individual (EPI)')">
+          <span class="map-tag">NR-06</span>
+          <img src="img/watermarked_img_6407733374608560642.png" 
+               data-basename="watermarked_img_6407733374608560642"
+               onerror="tratarErroImagem(this)" 
+               alt="NR-06 EPI">
+          <div class="map-expand-hint">🔍 Clique para Ampliar</div>
+        </div>
+        <div class="map-body">
+          <h3 class="map-title">NR-06: Equipamento de Proteção Individual</h3>
+          <p class="map-desc">Uso efetivo no posto, integridade de protetores auditivos e óculos, validade do Certificado de Aprovação (CA), fichas de entrega assinadas e higienização periódica.</p>
+          <div class="map-checklist-link">Checklist: Itens 7.1 até 7.3</div>
+        </div>
+      </article>
+
+    </div>
+
+  </main>
+
+  <!-- Modal de Zoom para Visualização Completa -->
+  <div class="modal-overlay" id="image-modal" onclick="fecharModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="fecharModal()">✕</button>
+      <img id="modal-img" src="" alt="Mapa Mental">
+      <div class="modal-title-bar" id="modal-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    // Gerenciador Inteligente de Fallback de Imagens
+    // Como o Windows oculta extensões (.png, .jpg, .jpeg) e pode estar em 'img/' ou 'public/img/'
+    function tratarErroImagem(img) {
+      const base = img.getAttribute('data-basename');
+      if (!img.dataset.step) img.dataset.step = "1";
+
+      const step = parseInt(img.dataset.step);
+
+      if (step === 1) {
+        // Tenta .jpg na pasta img/
+        img.dataset.step = "2";
+        img.src = `img/${base}.jpg`;
+      } else if (step === 2) {
+        // Tenta .jpeg na pasta img/
+        img.dataset.step = "3";
+        img.src = `img/${base}.jpeg`;
+      } else if (step === 3) {
+        // Tenta .png na pasta public/img/
+        img.dataset.step = "4";
+        img.src = `public/img/${base}.png`;
+      } else if (step === 4) {
+        // Tenta .jpg na pasta public/img/
+        img.dataset.step = "5";
+        img.src = `public/img/${base}.jpg`;
+      } else {
+        // Placeholder caso o arquivo ainda não exista
+        img.onerror = null;
+        img.src = `https://placehold.co/800x450/0b1a30/ffffff?text=${encodeURIComponent(img.alt)}`;
+      }
+    }
+
+    // Filtro interativo por categoria
+    function filtrarCategoria(cat, elementoClicado = null) {
+      const pills = document.querySelectorAll('.filter-pill');
+      pills.forEach(p => p.classList.remove('active'));
+
+      if (elementoClicado) {
+        elementoClicado.classList.add('active');
+      } else {
+        const pillCorrespondente = Array.from(pills).find(p => {
+          const onclickAttr = p.getAttribute('onclick') || '';
+          return onclickAttr.includes(`'${cat}'`);
+        });
+        if (pillCorrespondente) pillCorrespondente.classList.add('active');
+      }
+
+      const cards = document.querySelectorAll('.map-card');
+      cards.forEach(card => {
+        if (cat === 'todos' || card.getAttribute('data-cat') === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Suporte a carregamento direto via URL (ex: guias.html?cat=nr12)
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('cat');
+      if (catParam) {
+        filtrarCategoria(catParam);
+      }
+    });
+
+    // Modal de Zoom
+    function abrirModal(wrapper, titulo) {
+      const modal = document.getElementById('image-modal');
+      const modalImg = document.getElementById('modal-img');
+      const caption = document.getElementById('modal-caption');
+
+      const cardImg = wrapper.querySelector('img');
+      modalImg.src = cardImg.src;
+      caption.textContent = titulo;
+      modal.classList.add('active');
+    }
+
+    function fecharModal() {
+      const modal = document.getElementById('image-modal');
+      modal.classList.remove('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') fecharModal();
+    });
+  </script>
+</body>
+</html>

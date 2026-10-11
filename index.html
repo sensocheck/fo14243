@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist de Inspeção de Segurança do Trabalho - FO14243</title>
+  <style>
+    :root {
+      --primary-navy: #0b1a30;
+      --secondary-navy: #1a365d;
+      --accent-blue: #2563eb;
+      --bg-page: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --color-c: #16a34a;
+      --color-nc: #dc2626;
+      --color-na: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      padding-bottom: 90px;
+    }
+
+    /* Topo Fixo */
+    .topbar {
+      background-color: var(--primary-navy);
+      color: #ffffff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+    }
+
+    .topbar-titles h1 {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .topbar-titles span {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .live-kpi-badge {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      gap: 14px;
+    }
+
+    .container {
+      max-width: 1020px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    /* Card de Metadados */
+    .meta-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      padding: 18px 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .meta-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--secondary-navy);
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+
+    .meta-card-header h2 {
+      font-size: 0.95rem;
+      color: var(--secondary-navy);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .meta-badge {
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .input-group input, .input-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 0.85rem;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Categorias */
+    .category-section {
+      margin-bottom: 26px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .category-title {
+      background-color: var(--secondary-navy);
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      letter-spacing: 0.4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-mindmap {
+      background: rgba(6, 182, 212, 0.18);
+      border: 1px solid #06b6d4;
+      color: #38bdf8;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-mindmap:hover {
+      background: #06b6d4;
+      color: #0b1a30;
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+    }
+
+    .topbar-nav-link {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .topbar-nav-link:hover {
+      background: #06b6d4;
+      color: #0b1a30;
+      border-color: #06b6d4;
+    }
+
+    .category-counter {
+      background: rgba(255,255,255,0.2);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .question-card {
+      padding: 14px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      transition: background-color 0.2s;
+    }
+
+    .question-card:last-child {
+      border-bottom: none;
+    }
+
+    .question-card.status-nc-active {
+      border-left: 5px solid var(--color-nc);
+      background-color: #fff9f9;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .question-text {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      font-weight: 500;
+      flex: 1;
+      min-width: 280px;
+      line-height: 1.45;
+    }
+
+    .status-btn-group {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .status-btn {
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-main);
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .status-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .status-btn.btn-c.active {
+      background: var(--color-c);
+      color: #ffffff;
+      border-color: var(--color-c);
+    }
+
+    .status-btn.btn-nc.active {
+      background: var(--color-nc);
+      color: #ffffff;
+      border-color: var(--color-nc);
+    }
+
+    .status-btn.btn-na.active {
+      background: var(--color-na);
+      color: #ffffff;
+      border-color: var(--color-na);
+    }
+
+    /* Gaveta de NC */
+    .nc-drawer {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .nc-drawer.active {
+      display: block;
+    }
+
+    .nc-grid {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 820px) {
+      .nc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .photo-upload-area {
+      border: 2px dashed #94a3b8;
+      border-radius: 6px;
+      height: 200px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .photo-upload-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-upload-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .photo-upload-area input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .watermark-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.75);
+      color: #ffffff;
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      font-family: monospace;
+    }
+
+    .nc-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nc-fields textarea {
+      width: 100%;
+      height: 62px;
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      resize: vertical;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 10px;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 12px 24px;
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .bottom-bar-info {
+      font-size: 0.82rem;
+      color: #475569;
+    }
+
+    .btn-submit {
+      background: var(--primary-navy);
+      color: #ffffff;
+      border: none;
+      padding: 12px 28px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+      box-shadow: 0 2px 6px rgba(11,26,48,0.25);
+    }
+
+    .btn-submit:hover {
+      background: #1e3a8a;
+    }
+
+    /* ==========================================
+       ESTILOS DO RELATÓRIO EXECUTIVO (A4 PAISAGEM)
+       ========================================== */
+    #relatorio-print-container {
+      display: none;
+    }
+
+    @media print {
+      /* Configuração Forçada de A4 Paisagem e Cores */
+      @page {
+        size: A4 landscape;
+        margin: 8mm 10mm 8mm 10mm;
+      }
+      
+      html, body {
+        background: #ffffff !important;
+        color: #1e293b !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Ocultar toda a tela de preenchimento na impressão */
+      .topbar, .container, .bottom-bar {
+        display: none !important;
+      }
+
+      /* Exibir exclusivamente o Relatório Formatado */
+      #relatorio-print-container {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      .pdf-sheet {
+        page-break-after: always;
+        break-after: page;
+        min-height: 98vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px 0;
+      }
+
+      .pdf-sheet:last-child {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+
+      .pdf-top-badge {
+        font-size: 8pt;
+        font-weight: 800;
+        color: #c53030;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 2px;
+      }
+
+      .pdf-main-title {
+        font-size: 16pt;
+        font-weight: 800;
+        color: #0b1a30;
+        margin-bottom: 12px;
+      }
+
+      /* 4 Cards de KPIs */
+      .pdf-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .pdf-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 10px 8px 8px 8px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .pdf-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 5px;
+      }
+      .card-c1::before { background-color: #1a365d; }
+      .card-c2::before { background-color: #2e7d32; }
+      .card-c3::before { background-color: #d9534f; }
+      .card-c4::before { background-color: #dc2626; }
+
+      .pdf-card-label {
+        font-size: 7.5pt;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+
+      .pdf-card-val {
+        font-size: 24pt;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 3px;
+      }
+      .val-c1 { color: #0b1a30; }
+      .val-c2 { color: #2e7d32; }
+      .val-c3 { color: #d9534f; }
+      .val-c4 { color: #dc2626; }
+
+      .pdf-card-sub { font-size: 7.5pt; color: #64748b; }
+
+      /* Caixa de Risco */
+      .pdf-diag-box {
+        background: #fff5f5 !important;
+        border: 1px solid #feb2b2 !important;
+        border-radius: 6px;
+        padding: 8px 12px;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+
+      .pdf-diag-title {
+        font-size: 8.5pt;
+        font-weight: 800;
+        color: #c53030;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+
+      .pdf-diag-text {
+        font-size: 8pt;
+        color: #475569;
+        line-height: 1.35;
+      }
+
+      /* Tabela de NRs */
+      .pdf-nr-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8pt;
+        margin-bottom: 12px;
+      }
+
+      .pdf-nr-table thead tr {
+        background-color: #0b1a30 !important;
+        color: #ffffff !important;
+      }
+
+      .pdf-nr-table th {
+        padding: 6px 10px;
+        font-weight: 700;
+        text-align: left;
+      }
+
+      .pdf-nr-table td {
+        padding: 5px 10px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .pdf-nr-table tr:nth-child(even) {
+        background-color: #f8fafc !important;
+      }
+
+      .text-center { text-align: center; }
+
+      .risk-cr { color: #dc2626; font-weight: 800; }
+      .risk-al { color: #ea580c; font-weight: 800; }
+      .risk-me { color: #16a34a; font-weight: 700; }
+      .risk-ba { color: #0284c7; font-weight: 700; }
+
+      /* Caderno de Fotos */
+      .pdf-nc-block {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        overflow: hidden;
+      }
+
+      .pdf-nc-header {
+        background-color: #f1f5f9 !important;
+        padding: 6px 10px;
+        border-bottom: 1px solid #cbd5e1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 8.5pt;
+        font-weight: 700;
+      }
+
+      .pdf-nc-body {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 12px;
+        padding: 10px;
+      }
+
+      .pdf-img-box {
+        width: 100%;
+        height: 185px;
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .pdf-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .pdf-nc-desc {
+        background: #fff5f5 !important;
+        border-left: 3px solid #dc2626;
+        padding: 6px 8px;
+        font-size: 8pt;
+        color: #1e293b;
+        margin-top: 3px;
+        margin-bottom: 8px;
+      }
+
+      .pdf-action-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 7.5pt;
+      }
+
+      .pdf-action-table th, .pdf-action-table td {
+        border: 1px solid #e2e8f0;
+        padding: 4px 6px;
+      }
+
+      .pdf-action-table th {
+        background: #f8fafc !important;
+        color: #475569;
+        text-align: left;
+      }
+
+      .pdf-sheet-footer {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #cbd5e1;
+        padding-top: 6px;
+        font-size: 7.5pt;
+        color: #64748b;
+        margin-top: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topo -->
+  <header class="topbar">
+    <div class="topbar-titles">
+      <h1>Auditoria de Segurança do Trabalho</h1>
+      <span>Formulário de Inspeção Padronizado FO14243</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <a href="guias.html" target="_blank" class="topbar-nav-link">
+        🧠 <span>Central de Guias & Mindmaps</span>
+      </a>
+      <div class="live-kpi-badge" id="kpi-live">
+        <span>Aderência: <strong id="kpi-score-val">100%</strong></span>
+        <span>NCs: <strong id="kpi-nc-count" style="color: #f87171;">0</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Corpo Principal -->
+  <main class="container">
+    
+    <section class="meta-card">
+      <div class="meta-card-header">
+        <h2>Identificação e Parâmetros da Inspeção</h2>
+        <span class="meta-badge">Formulário: FO14243</span>
+      </div>
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Unidade</label>
+          <input type="text" id="meta-unidade" value="Americana">
+        </div>
+        <div class="input-group">
+          <label>Área / Setor</label>
+          <input type="text" id="meta-setor" value="Tinturaria">
+        </div>
+        <div class="input-group">
+          <label>Data da Inspeção</label>
+          <input type="date" id="meta-data" value="2026-09-02">
+        </div>
+        <div class="input-group">
+          <label>Responsável Técnico / Inspetor</label>
+          <input type="text" id="meta-inspetor" placeholder="Ex: Lucas Zanes (TST)">
+        </div>
+      </div>
+    </section>
+
+    <!-- Perguntas Injetadas -->
+    <div id="checklist-container"></div>
+
+  </main>
+
+  <!-- Rodapé Fixo -->
+  <footer class="bottom-bar">
+    <div class="bottom-bar-info">
+      Total de itens auditados: <strong>82</strong>
+    </div>
+    <button type="button" class="btn-submit" id="btn-pdf-trigger" onclick="gerarRelatorioPDFExecutivo()">
+      <span>Gerar Relatório Executivo em PDF</span>
+    </button>
+  </footer>
+
+  <!-- Container onde o Relatório Completo é montado para o PDF -->
+  <div id="relatorio-print-container"></div>
+
+  <script>
+    const categoriasChecklist = [
+  {
+    "norma": "NR-23",
+    "titulo": "PROTEÇÃO CONTRA INCÊNDIOS",
+    "perguntas": [
+      "1.1 Os extintores estão sinalizados (piso e parede)?",
+      "1.2 Há extintores vencidos no local?",
+      "1.3 Foi encontrado extintor obstruído?",
+      "1.4 As macas estão nos locais e desobstruídas?",
+      "1.5 Foi encontrado hidrante obstruído e/ou vazando?",
+      "1.6 Foi identificado algum bico de sprinklers obstruído ou vazando?",
+      "1.7 No local existe mangotinho instalado. Está desobstruído?",
+      "1.8 As portas corta fogo estão desobstruídas?",
+      "1.9 A saída de emergência esta sinalizada?",
+      "1.10 As barras anti panico das portas estão funcionando?",
+      "1.11 Estão sendo respeitados os locais para fumante?",
+      "1.12 Existe no local sinalização de proibido fumar?",
+      "1.13 Existe iluminação de emergência?",
+      "1.14 Existe membro da EASE no turno de trabalho?",
+      "1.15 Existe na área quadro de aviso com a identificação dos brigadista?",
+      "1.16 Os equipamentos de respiração autonomo - ERA estão em condições de uso?",
+      "1.17 Existe acúmulo de pelúcia: luminárias, eletrocalha, tubulações, conduletes, etc.?",
+      "1.18 Os dutos e ramais da Central de Climatização estão limpos?",
+      "1.19 As válvulas de governo de hidrantes estão abertas e travadas com cadeado?",
+      "1.20 A CIPA tem por obrigação registrar a percepção dos riscos dos trabalhadores, em conformidade com o subitem 1.5.3.3 da NR-01, por meio do mapa de risco."
+    ]
+  },
+  {
+    "norma": "NR-12",
+    "titulo": "MÁQUINAS E EQUIPAMENTOS",
+    "perguntas": [
+      "2.1 Todas as partes móveis estão protegidas (12.5.9)?",
+      "2.2 As proteções das partes móveis estão pintadas e instaladas adequadamente (12.5.11)?",
+      "2.3 As tubulações de vapor possuem isolamento térmico?",
+      "2.4 Existe botões de emergência e estão funcionando?",
+      "2.5 O painel de controle das monovias e botões de emergências dos limpadores viajantes estão presos por cabo de aço?",
+      "2.6 As maquinas e equipamentos são inspecionados antes de iniciar o trabalho? Tem algum registro?",
+      "2.7 As ferramentas elétricas estão com as manoplas, fiação elétricas e plug em bom estado de conservação?",
+      "2.8 As ferramentas manuais estão em bom estado de conservação, sem desgastes ou avaria que comprometam seu uso?",
+      "2.9 As escada e plataformas estão em bom estado sem a presença de ferrugem ou amassados em sua estrutura?",
+      "2.10 Existe guarda corpo e/ou corrimão com dimensão: 1,20m de altura com travessão intermediário de 0,70m; rodapé de 0,20m; e com fechamento seguro da abertura.",
+      "2.11 As patolas das plataformas móveis (tipo escada) estão em bom estado?",
+      "2.12 Os pisos das plataformas estão em bom estado de conservação?",
+      "2.13 Os degraus de escadas estão limpos e sem irregularidades?",
+      "2.14 As áreas de circulação estão desobstruídas (12.2.1.2)?",
+      "2.15 As tubulações possuem vazamento (água, produtos químicos, vapor, ar comprimido)?"
+    ]
+  },
+  {
+    "norma": "NR-11",
+    "titulo": "TRANSPORTE, MOVIMENTAÇÃO, ARMAZENAGEM E MANUSEIO DE MATERIAIS",
+    "perguntas": [
+      "3.1 Operador possui habilitação/ capacitação para uso?",
+      "3.2 Condições gerais do equipamento: cabos de aço, painel de comando, roldanas, pedais, sensores e micros de segurança",
+      "3.3 Sinalização de carga máxima permitida nos equipamentos",
+      "3.4 Nos locais de carga suspensa tem sinalização?",
+      "3.5 Durante o uso da Transpaleteira elétrica foi apresentado o uso do check-list?",
+      "3.6 Durante o uso do Carro Elétrico foi apresentado o uso do check-list?",
+      "3.7 Durante o uso da Empilhadeira foi apresentado o uso do check-list?",
+      "3.8 Durante o uso da Monovia foi apresentado o uso do check-list?",
+      "3.9 Durante o uso do Elevador de Cargas foi apresentado o uso do check-list?",
+      "3.10 Estão sendo respeitadas as condições de armazenamento: altura máxima permitida, pilhas uniformes?",
+      "3.11 Os corredores de passagem estão sinalizados?",
+      "3.12 Os materiais armazenados em prateleiras ou armários não apresentam riscos de queda?",
+      "3.13 Os pontos cegos estão sinalizados?"
+    ]
+  },
+  {
+    "norma": "NR-10",
+    "titulo": "SEGURANÇA EM INSTALAÇÕES E SERVIÇOS EM ELETRICIDADE",
+    "perguntas": [
+      "4.1 Os painéis elétricos estão fechados?",
+      "4.2 Os painéis elétricos estão desobstruídos?",
+      "4.3 Os cabos elétricos estão protegidos por condulete ou canaletas de passagem?",
+      "4.4 Condições gerais de painéis elétricos, botoeiras, conduletes, tomadas, flexíveis (sem fios expostos, sem proteção, abertas e etc.)",
+      "4.5 Existe sinalização nos painéis elétricos, botoeiras e tomadas?",
+      "4.6 As ferramentas e equipamentos utilizados na manutenção elétrica estão em bom estado?",
+      "4.7 Os eletricistas estão utilizando capacete e uniforme retardante a chama durante a realização de suas atividades?",
+      "4.8 Existe lâmpada queimada ou sem proteção?",
+      "4.9 Nos equipamentos/ maquinas em manutenção foi realizado o bloqueio e etiquetagem de fontes de energia?",
+      "4.10 Existe partes vivas expostas de circuitos e equipamentos elétricos?"
+    ]
+  },
+  {
+    "norma": "NR-8",
+    "titulo": "EDIFICAÇÕES",
+    "perguntas": [
+      "5.1 Existem irregularidades nos pisos internos que atrapalham a movimentação de carrinhos, latas e transpaleteira elétrica?",
+      "5.2 Existe a presença de desnível, buracos, saliência ou acumulo de terra nas ruas ou dentro das áreas produtivas?",
+      "5.3 As canaletas, grelhas e tampas de caixa de passagem estão em bom estado?",
+      "5.4 O corrimão da escada fixa está em boas condições de uso?",
+      "5.5 O piso da escada fixa é antiderrapante?",
+      "5.6 A iluminação da escada fixa esta funcionando?",
+      "5.7 Nos caminhos de acesso aos prédios produtivos existe presença de animais peçonhentos ou vetores?",
+      "5.8 O forro falso está faltando placa? Tem placa com risco de queda?",
+      "5.9 Portas e/ou janelas estão em boas condições?"
+    ]
+  },
+  {
+    "norma": "ARMAZENAGEM",
+    "titulo": "MANUSEIO DE PRODUTOS QUÍMICOS",
+    "perguntas": [
+      "6.1 Os tambores, bombonas e containers estão em bom estado de conservação?",
+      "6.2 Existe FISPQ atualizada e impressa no local (26.5.1)?",
+      "6.3 O kit de emergência está com lacre e os materiais que ficam externo de forma correta?",
+      "6.4 Existe contenção para os produtos armazenado?",
+      "6.5 Existe rotulagem dos tambores/ bombonas/ containers?",
+      "6.6 Existe produto inflamável armazenado na área de trabalho?",
+      "6.7 No local de armazenamento de produto químico existe chuveiro lava olho de emergência?",
+      "6.8 Os chuveiros lava olhos de emergência estão funcionando corretamente?",
+      "6.9  No local de armazenamento de produto inflamável existe o cabo de aterramento para caminhões?",
+      "6.10 Os produtos químicos estão sendo transportados em vasilhames adequados, sobre palete ou similar?",
+      "6.11 Os produtos fracionados estão identificados e transportados de forma correta?",
+      "6.12 As prateleiras ou estantes possuem proteção contra impactos da empilhadeira?"
+    ]
+  },
+  {
+    "norma": "NR-6",
+    "titulo": "EQUIPAMENTO DE PROTEÇÃO INDIVIDUAL - EPI",
+    "perguntas": [
+      "7.1 Os EPI em uso estão dentro da validade e conservação?",
+      "7.2 Foi identificado colaborador fazendo atividade sem EPI?",
+      "7.3 O EPI em uso esta adequado para atividade?"
+    ]
+  }
+];
+    const respostas = {};
+
+    function renderizarChecklist() {
+      const container = document.getElementById('checklist-container');
+      let globalIndex = 0;
+
+      categoriasChecklist.forEach((cat) => {
+        const sec = document.createElement('section');
+        sec.className = 'category-section';
+
+        const mapaNormaCat = {
+          'NR-23': 'nr23',
+          'NR-12': 'nr12',
+          'NR-11': 'nr11',
+          'NR-10': 'nr10',
+          'NR-8': 'nr8',
+          'ARMAZENAGEM': 'nr26',
+          'NR-6': 'nr6'
+        };
+        const catUrlParam = mapaNormaCat[cat.norma] || 'todos';
+
+        const title = document.createElement('div');
+        title.className = 'category-title';
+        title.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <span>${cat.norma} – ${cat.titulo}</span>
+            <a href="guias.html?cat=${catUrlParam}" target="_blank" class="btn-mindmap" title="Abrir Guia e Mapa Mental da ${cat.norma}">
+              🧠 <span>Ver Mapa Mental</span>
+            </a>
+          </div>
+          <span class="category-counter">${cat.perguntas.length} itens</span>
+        `;
+        sec.appendChild(title);
+
+        cat.perguntas.forEach((pergunta) => {
+          const id = 'item_' + (globalIndex++);
+          respostas[id] = {
+            norma: cat.norma,
+            pergunta: pergunta,
+            status: 'C',
+            fotoBase64: null,
+            desvio: '',
+            acao: '',
+            responsavel: '',
+            prazo: '30/09/2026'
+          };
+
+          const card = document.createElement('div');
+          card.className = 'question-card';
+          card.id = 'card_' + id;
+
+          card.innerHTML = `
+            <div class="question-header">
+              <div class="question-text">${pergunta}</div>
+              <div class="status-btn-group">
+                <button type="button" class="status-btn btn-c active" onclick="definirStatus('${id}', 'C')">C</button>
+                <button type="button" class="status-btn btn-nc" onclick="definirStatus('${id}', 'NC')">NC</button>
+                <button type="button" class="status-btn btn-na" onclick="definirStatus('${id}', 'NA')">NA</button>
+              </div>
+            </div>
+
+            <div class="nc-drawer" id="drawer_${id}">
+              <div class="nc-grid">
+                
+                <div class="photo-upload-area" id="box_foto_${id}">
+                  <div class="photo-upload-label" id="label_foto_${id}">
+                    📸 <strong>Clique ou toque aqui</strong><br>para fotografar a evidência técnica
+                  </div>
+                  <input type="file" accept="image/*" capture="environment" onchange="processarFoto(event, '${id}', '${cat.norma}')">
+                  <div class="watermark-text" id="wm_${id}" style="display:none;"></div>
+                </div>
+
+                <div class="nc-fields">
+                  <div class="input-group">
+                    <label>Observações / Evidências (Desvio Constatado)</label>
+                    <textarea placeholder="Descreva a condição insegura constatada..." onchange="atualizarCampo('${id}', 'desvio', this.value)"></textarea>
+                  </div>
+                  
+                  <div class="action-row">
+                    <div class="input-group">
+                      <label>Ações Corretivas Propostas</label>
+                      <input type="text" placeholder="Ação imediata ou corretiva..." onchange="atualizarCampo('${id}', 'acao', this.value)">
+                    </div>
+                    <div class="input-group">
+                      <label>Prazo</label>
+                      <input type="text" value="30/09/2026" onchange="atualizarCampo('${id}', 'prazo', this.value)">
+                    </div>
+                  </div>
+
+                  <div class="input-group">
+                    <label>Responsável</label>
+                    <input type="text" placeholder="Ex: Manutenção Mecânica / Supervisor" onchange="atualizarCampo('${id}', 'responsavel', this.value)">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          `;
+          sec.appendChild(card);
+        });
+
+        container.appendChild(sec);
+      });
+
+      atualizarPainelKPI();
+    }
+
+    function definirStatus(id, novoStatus) {
+      respostas[id].status = novoStatus;
+
+      const card = document.getElementById('card_' + id);
+      const drawer = document.getElementById('drawer_' + id);
+      const botoes = card.querySelectorAll('.status-btn');
+
+      botoes.forEach(b => b.classList.remove('active'));
+
+      if (novoStatus === 'C') {
+        card.querySelector('.btn-c').classList.add('active');
+        drawer.classList.remove('active');
+        card.classList.remove('status-nc-active');
+      } else if (novoStatus === 'NC') {
+        card.querySelector('.btn-nc').classList.add('active');
+        drawer.classList.add('active');
+        card.classList.add('status-nc-active');
+      } else {
+        card.querySelector('.btn-na').classList.add('active');
+        drawer.classList.remove('active');
+        card.classList.remove('status-nc-active');
+      }
+
+      atualizarPainelKPI();
+    }
+
+    function atualizarCampo(id, campo, valor) {
+      respostas[id][campo] = valor;
+    }
+
+    async function processarFoto(event, id, norma) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 1200;
+          let w = img.width;
+          let h = img.height;
+
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const setor = document.getElementById('meta-setor').value || 'Tinturaria';
+          const agora = new Date();
+          const timestamp = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR');
+          const watermark = `[SSO AUDIT] ${timestamp} | ${norma} | ${setor}`;
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+          ctx.fillRect(0, h - 36, w, 36);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 15px monospace';
+          ctx.fillText(watermark, 14, h - 12);
+
+          const finalDataUrl = canvas.toDataURL('image/jpeg', 0.80);
+          respostas[id].fotoBase64 = finalDataUrl;
+
+          const box = document.getElementById('box_foto_' + id);
+          box.innerHTML = `<img src="${finalDataUrl}" alt="Evidência"><div class="watermark-text">${watermark}</div>`;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function calcularIndicadoresLocais() {
+      const itens = Object.values(respostas);
+      const auditados = itens.filter(i => i.status !== 'NA').length;
+      const conformes = itens.filter(i => i.status === 'C').length;
+      const naoConformes = itens.filter(i => i.status === 'NC').length;
+      const aderencia = auditados > 0 ? ((conformes / auditados) * 100).toFixed(1) : '100.0';
+
+      const porNorma = {};
+      itens.forEach(item => {
+        const n = item.norma || 'Geral';
+        if (!porNorma[n]) porNorma[n] = { total: 0, c: 0, nc: 0 };
+        if (item.status !== 'NA') {
+          porNorma[n].total += 1;
+          if (item.status === 'C') porNorma[n].c += 1;
+          if (item.status === 'NC') porNorma[n].nc += 1;
+        }
+      });
+
+      const titulosNorma = {
+        'NR-23': 'NR-23 – Proteção Contra Incêndios',
+        'NR-12': 'NR-12 – Segurança em Máquinas e Equipamentos',
+        'NR-11': 'NR-11 – Transporte, Movimentação e Armazenagem',
+        'NR-10': 'NR-10 – Instalações e Serviços em Eletricidade',
+        'NR-8': 'NR-08 – Edificações e Estruturas Prediais',
+        'ARMAZENAGEM': 'Armazenagem e Químicos (ISO 14001 / NR-26)',
+        'NR-6': 'NR-06 – Equipamentos de Proteção Individual (EPI)'
+      };
+
+      const tabelaNormas = Object.keys(porNorma).map(norma => {
+        const d = porNorma[norma];
+        const tx = d.total > 0 ? ((d.c / d.total) * 100).toFixed(1) : '100.0';
+        let risco = 'Baixo';
+        let riscoClass = 'risk-ba';
+
+        if (parseFloat(tx) < 50.0) {
+          risco = 'Crítico'; riscoClass = 'risk-cr';
+        } else if (parseFloat(tx) < 70.0) {
+          risco = 'Alto'; riscoClass = 'risk-al';
+        } else if (parseFloat(tx) < 90.0) {
+          risco = 'Médio'; riscoClass = 'risk-me';
+        }
+
+        return {
+          norma: titulosNorma[norma] || norma,
+          total: d.total,
+          c: d.c,
+          nc: d.nc,
+          aderencia: tx,
+          risco,
+          riscoClass
+        };
+      });
+
+      tabelaNormas.sort((a, b) => parseFloat(a.aderencia) - parseFloat(b.aderencia));
+
+      let nivelRiscoGeral = 'BAIXO';
+      let textoDiagnostico = 'A aderência regulatória atende aos padrões satisfatórios estabelecidos pelo SGI. Manter a rotina de manutenções preventivas e inspeções periódicas.';
+
+      const adNum = parseFloat(aderencia);
+      if (adNum < 60.0) {
+        nivelRiscoGeral = 'CRÍTICO';
+        textoDiagnostico = `A taxa de não conformidade de ${(100 - adNum).toFixed(1)}% aponta vulnerabilidade severa nos setores inspecionados. Há risco imediato de acidentes de alto impacto e embargo legal. Priorizar intervenções em máquinas (NR-12), combate a incêndio (NR-23) e armazenagem (NR-11).`;
+      } else if (adNum < 85.0) {
+        nivelRiscoGeral = 'ALTO';
+        textoDiagnostico = `Taxa de aderência intermediária (${aderencia}%). Foram apontadas não conformidades com risco operacional moderado/alto. Recomenda-se a emissão imediata dos planos de ação aos responsáveis.`;
+      }
+
+      return {
+        auditados,
+        conformes,
+        pctConformes: auditados > 0 ? ((conformes / auditados) * 100).toFixed(1) : '100.0',
+        naoConformes,
+        pctNaoConformes: auditados > 0 ? ((naoConformes / auditados) * 100).toFixed(1) : '0.0',
+        aderencia,
+        nivelRiscoGeral,
+        textoDiagnostico,
+        tabelaNormas
+      };
+    }
+
+    function atualizarPainelKPI() {
+      const kpis = calcularIndicadoresLocais();
+      document.getElementById('kpi-score-val').textContent = `${kpis.aderencia}%`;
+      document.getElementById('kpi-nc-count').textContent = kpis.naoConformes;
+      
+      const badge = document.getElementById('kpi-live');
+      if (parseFloat(kpis.aderencia) < 50) {
+        badge.style.background = '#dc2626';
+      } else if (parseFloat(kpis.aderencia) < 80) {
+        badge.style.background = '#d97706';
+      } else {
+        badge.style.background = 'rgba(255, 255, 255, 0.15)';
+      }
+    }
+
+    // ==========================================
+    // MOTOR DE GERAÇÃO DEFINITIVO (100% BLINDADO)
+    // ==========================================
+    function gerarRelatorioPDFExecutivo() {
+      const unidade = document.getElementById('meta-unidade').value || 'Americana';
+      const setor = document.getElementById('meta-setor').value || 'Tinturaria';
+      const dataInspecao = document.getElementById('meta-data').value || '2026-09-02';
+      const inspetor = document.getElementById('meta-inspetor').value || 'Lucas Zanes (TST)';
+      
+      const kpis = calcularIndicadoresLocais();
+      const itensNC = Object.values(respostas).filter(i => i.status === 'NC');
+      const container = document.getElementById('relatorio-print-container');
+
+      // 1. Tabela de Normas
+      const linhasNormas = kpis.tabelaNormas.map(t => `
+        <tr>
+          <td>${t.norma}</td>
+          <td class="text-center">${t.total}</td>
+          <td class="text-center">${t.c}</td>
+          <td class="text-center" style="color: ${t.nc > 0 ? '#dc2626' : '#334155'}; font-weight: ${t.nc > 0 ? '700' : '400'};">${t.nc}</td>
+          <td class="text-center" style="font-weight: 700; color: ${parseFloat(t.aderencia) < 70 ? '#dc2626' : '#2e7d32'};">${t.aderencia}%</td>
+          <td class="text-center"><span class="${t.riscoClass}">${t.risco}</span></td>
+        </tr>
+      `).join('');
+
+      // 2. Caderno de Evidências Fotográficas
+      let blocosEvidencias = '';
+      if (itensNC.length === 0) {
+        blocosEvidencias = `
+          <div class="pdf-sheet">
+            <div>
+              <div class="pdf-top-badge">Caderno Visual de Auditoria</div>
+              <h1 class="pdf-main-title">Apontamentos e Evidências Fotográficas</h1>
+              <div style="padding: 50px 20px; text-align: center; color: #16a34a; font-weight: 700; font-size: 14pt; border: 2px dashed #16a34a; border-radius: 8px; margin-top: 20px;">
+                ✓ Nenhuma não conformidade detectada na inspeção realizada.<br>
+                <span style="font-size: 10pt; color: #64748b; font-weight: normal;">Todos os requisitos auditados encontram-se em conformidade regulamentar.</span>
+              </div>
+            </div>
+            <div class="pdf-sheet-footer">
+              <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243</span>
+              <span>Página 2</span>
+            </div>
+          </div>
+        `;
+      } else {
+        // 2 fotos por página A4 Paisagem
+        for (let i = 0; i < itensNC.length; i += 2) {
+          const lote = itensNC.slice(i, i + 2);
+          const paginaNum = Math.floor(i / 2) + 2;
+
+          blocosEvidencias += `
+            <div class="pdf-sheet">
+              <div>
+                <div class="pdf-top-badge">Caderno Visual de Auditoria</div>
+                <h1 class="pdf-main-title" style="margin-bottom: 12px;">Apontamentos e Evidências Fotográficas</h1>
+
+                ${lote.map(item => `
+                  <div class="pdf-nc-block">
+                    <div class="pdf-nc-header">
+                      <span>${item.norma} – ${item.pergunta}</span>
+                      <span style="color: #dc2626; font-weight: 800;">NÃO CONFORME</span>
+                    </div>
+                    <div class="pdf-nc-body">
+                      <div class="pdf-img-box">
+                        ${item.fotoBase64 ? `<img src="${item.fotoBase64}" alt="Evidência">` : '<div style="color: #94a3b8; font-size: 8.5pt;">Foto não anexada</div>'}
+                      </div>
+                      <div>
+                        <strong style="color: #475569; font-size: 8pt; text-transform: uppercase;">Desvio Constatado (Observações):</strong>
+                        <div class="pdf-nc-desc">${item.desvio || 'Desvio não descrito pelo inspetor.'}</div>
+
+                        <strong style="color: #475569; font-size: 8pt; text-transform: uppercase;">Ação Corretiva Proposta:</strong>
+                        <table class="pdf-action-table">
+                          <tr>
+                            <th style="width: 55%;">Ação Corretiva</th>
+                            <th style="width: 25%;">Responsável</th>
+                            <th style="width: 20%;">Prazo</th>
+                          </tr>
+                          <tr>
+                            <td>${item.acao || 'A regularizar.'}</td>
+                            <td>${item.responsavel || 'Setorial'}</td>
+                            <td><strong>${item.prazo || '30/09/2026'}</strong></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <div class="pdf-sheet-footer">
+                <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243</span>
+                <span>Página ${paginaNum}</span>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Montagem do Relatório Completo
+      container.innerHTML = `
+        <!-- PÁGINA 1: DASHBOARD EXECUTIVO (IDÊNTICO À IMAGEM) -->
+        <div class="pdf-sheet">
+          <div>
+            <div class="pdf-top-badge">Auditoria Integrada de Segurança do Trabalho</div>
+            <h1 class="pdf-main-title">Painel de Indicadores de Segurança (KPIs)</h1>
+
+            <div class="pdf-kpi-grid">
+              <div class="pdf-card card-c1">
+                <div class="pdf-card-label">Requisitos Auditados</div>
+                <div class="pdf-card-val val-c1">${kpis.auditados}</div>
+                <div class="pdf-card-sub">Itens avaliados no FO14243</div>
+              </div>
+              <div class="pdf-card card-c2">
+                <div class="pdf-card-label">Conformidades</div>
+                <div class="pdf-card-val val-c2">${kpis.conformes}</div>
+                <div class="pdf-card-sub">${kpis.pctConformes}% de atendimento</div>
+              </div>
+              <div class="pdf-card card-c3">
+                <div class="pdf-card-label">Não Conformidades</div>
+                <div class="pdf-card-val val-c3">${kpis.naoConformes}</div>
+                <div class="pdf-card-sub">${kpis.pctNaoConformes}% de desvios críticos</div>
+              </div>
+              <div class="pdf-card card-c4">
+                <div class="pdf-card-label">Aderência Regulatória</div>
+                <div class="pdf-card-val val-c4">${kpis.aderencia}%</div>
+                <div class="pdf-card-sub">Meta SGI: ≥ 90,0%</div>
+              </div>
+            </div>
+
+            <div class="pdf-diag-box">
+              <div class="pdf-diag-title">DIAGNÓSTICO TÉCNICO DE RISCO: ${kpis.nivelRiscoGeral}</div>
+              <div class="pdf-diag-text">${kpis.textoDiagnostico}</div>
+            </div>
+
+            <table class="pdf-nr-table">
+              <thead>
+                <tr>
+                  <th>Norma Regulamentadora / Tema</th>
+                  <th class="text-center" style="width: 10%;">Total</th>
+                  <th class="text-center" style="width: 12%;">Conforme</th>
+                  <th class="text-center" style="width: 12%;">Não Conf.</th>
+                  <th class="text-center" style="width: 14%;">Aderência (%)</th>
+                  <th class="text-center" style="width: 14%;">Nível de Risco</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${linhasNormas}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pdf-sheet-footer">
+            <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243 | Inspetor: ${inspetor}</span>
+            <span>Página 1</span>
+          </div>
+        </div>
+
+        <!-- PÁGINAS SEGUINTES: CADERNO DE FOTOS -->
+        ${blocosEvidencias}
+      `;
+
+      // 3. Define o título da página para virar o nome padrão do PDF ao salvar
+      const tituloOriginal = document.title;
+      document.title = `Relatorio_SSO_FO14243_${setor}_${dataInspecao}`;
+
+      // 4. Dispara a janela de geração em PDF nativa (A4 Paisagem, 100% nítida e sem falhas)
+      window.print();
+
+      // Restaura o título da página
+      document.title = tituloOriginal;
+    }
+
+    window.onload = renderizarChecklist;
+  </script>
+</body>
+</html>
