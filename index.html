@@ -311,10 +311,17 @@
       }
     }
 
+    /* Área de Múltiplas Fotos */
+    .photos-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .photo-upload-area {
       border: 2px dashed #94a3b8;
       border-radius: 6px;
-      height: 200px;
+      height: 140px;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
@@ -332,11 +339,11 @@
     }
 
     .photo-upload-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: var(--text-muted);
       text-align: center;
-      padding: 10px;
+      padding: 5px;
     }
 
     .photo-upload-area input[type="file"] {
@@ -356,9 +363,48 @@
       right: 0;
       background: rgba(0,0,0,0.75);
       color: #ffffff;
-      font-size: 0.65rem;
-      padding: 3px 6px;
+      font-size: 0.55rem;
+      padding: 2px 4px;
       font-family: monospace;
+    }
+
+    .gallery-preview {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .thumb-container {
+      position: relative;
+      width: 65px;
+      height: 65px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: #e2e8f0;
+    }
+
+    .thumb-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumb-remove {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(220, 38, 38, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .nc-fields {
@@ -424,14 +470,13 @@
     }
 
     /* ==========================================
-       ESTILOS DO RELATÓRIO EXECUTIVO (A4 PAISAGEM)
-       ========================================== */
+        ESTILOS DO RELATÓRIO EXECUTIVO (A4 PAISAGEM)
+        ========================================== */
     #relatorio-print-container {
       display: none;
     }
 
     @media print {
-      /* Configuração Forçada de A4 Paisagem e Cores */
       @page {
         size: A4 landscape;
         margin: 8mm 10mm 8mm 10mm;
@@ -446,12 +491,10 @@
         print-color-adjust: exact !important;
       }
 
-      /* Ocultar toda a tela de preenchimento na impressão */
       .topbar, .container, .bottom-bar {
         display: none !important;
       }
 
-      /* Exibir exclusivamente o Relatório Formatado */
       #relatorio-print-container {
         display: block !important;
         width: 100% !important;
@@ -488,7 +531,6 @@
         margin-bottom: 12px;
       }
 
-      /* 4 Cards de KPIs */
       .pdf-kpi-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -537,7 +579,6 @@
 
       .pdf-card-sub { font-size: 7.5pt; color: #64748b; }
 
-      /* Caixa de Risco */
       .pdf-diag-box {
         background: #fff5f5 !important;
         border: 1px solid #feb2b2 !important;
@@ -561,7 +602,6 @@
         line-height: 1.35;
       }
 
-      /* Tabela de NRs */
       .pdf-nr-table {
         width: 100%;
         border-collapse: collapse;
@@ -596,7 +636,7 @@
       .risk-me { color: #16a34a; font-weight: 700; }
       .risk-ba { color: #0284c7; font-weight: 700; }
 
-      /* Caderno de Fotos */
+      /* Caderno de Fotos no PDF */
       .pdf-nc-block {
         border: 1px solid #cbd5e1;
         border-radius: 6px;
@@ -618,15 +658,19 @@
       }
 
       .pdf-nc-body {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 12px;
         padding: 10px;
       }
 
+      .pdf-img-grid-print {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+
       .pdf-img-box {
-        width: 100%;
-        height: 185px;
+        width: 140px;
+        height: 110px;
         background: #f8fafc;
         border: 1px dashed #cbd5e1;
         border-radius: 4px;
@@ -652,21 +696,28 @@
         margin-bottom: 8px;
       }
 
+      /* Tabela de Plano de Ação Final */
       .pdf-action-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 7.5pt;
+        margin-top: 10px;
       }
 
       .pdf-action-table th, .pdf-action-table td {
-        border: 1px solid #e2e8f0;
-        padding: 4px 6px;
+        border: 1px solid #cbd5e1;
+        padding: 5px 8px;
+        text-align: left;
       }
 
       .pdf-action-table th {
+        background: #0b1a30 !important;
+        color: #ffffff !important;
+        font-weight: 700;
+      }
+
+      .pdf-action-table tr:nth-child(even) {
         background: #f8fafc !important;
-        color: #475569;
-        text-align: left;
       }
 
       .pdf-sheet-footer {
@@ -736,7 +787,7 @@
   <!-- Rodapé Fixo -->
   <footer class="bottom-bar">
     <div class="bottom-bar-info">
-      Total de itens auditados: <strong>82</strong>
+      Total de itens auditados: <strong id="total-auditados">82</strong>
     </div>
     <button type="button" class="btn-submit" id="btn-pdf-trigger" onclick="gerarRelatorioPDFExecutivo()">
       <span>Gerar Relatório Executivo em PDF</span>
@@ -873,13 +924,16 @@
     ]
   }
 ];
+
     const respostas = {};
 
     function renderizarChecklist() {
       const container = document.getElementById('checklist-container');
       let globalIndex = 0;
+      let totalItens = 0;
 
       categoriasChecklist.forEach((cat) => {
+        totalItens += cat.perguntas.length;
         const sec = document.createElement('section');
         sec.className = 'category-section';
 
@@ -913,7 +967,7 @@
             norma: cat.norma,
             pergunta: pergunta,
             status: 'C',
-            fotoBase64: null,
+            fotos: [], // Mudado de fotoBase64 para um array de fotos
             desvio: '',
             acao: '',
             responsavel: '',
@@ -937,12 +991,14 @@
             <div class="nc-drawer" id="drawer_${id}">
               <div class="nc-grid">
                 
-                <div class="photo-upload-area" id="box_foto_${id}">
-                  <div class="photo-upload-label" id="label_foto_${id}">
-                    📸 <strong>Clique ou toque aqui</strong><br>para fotografar a evidência técnica
+                <div class="photos-container">
+                  <div class="photo-upload-area">
+                    <div class="photo-upload-label">
+                      📸 <strong>Clique ou toque aqui</strong><br>para adicionar fotos da evidência
+                    </div>
+                    <input type="file" accept="image/*" multiple onchange="processarFotos(event, '${id}')">
                   </div>
-                  <input type="file" accept="image/*" capture="environment" onchange="processarFoto(event, '${id}', '${cat.norma}')">
-                  <div class="watermark-text" id="wm_${id}" style="display:none;"></div>
+                  <div class="gallery-preview" id="galeria_${id}"></div>
                 </div>
 
                 <div class="nc-fields">
@@ -977,6 +1033,7 @@
         container.appendChild(sec);
       });
 
+      document.getElementById('total-auditados').innerText = totalItens;
       atualizarPainelKPI();
     }
 
@@ -1010,324 +1067,88 @@
       respostas[id][campo] = valor;
     }
 
-    async function processarFoto(event, id, norma) {
-      const file = event.target.files[0];
-      if (!file) return;
+    async function processarFotos(event, id) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const maxDim = 1200;
-          let w = img.width;
-          let h = img.height;
+      const setor = document.getElementById('meta-setor').value || 'Tinturaria';
+      const agora = new Date();
+      const timestamp = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR');
 
-          if (w > maxDim || h > maxDim) {
-            if (w > h) {
-              h = Math.round((h * maxDim) / w);
-              w = maxDim;
-            } else {
-              w = Math.round((w * maxDim) / h);
-              h = maxDim;
-            }
-          }
+      for (let file of files) {
+        const reader = new FileReader();
+        await new Promise((resolve) => {
+          reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+              const maxDim = 1000;
+              let w = img.width;
+              let h = img.height;
 
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
+              if (w > maxDim || h > maxDim) {
+                if (w > h) {
+                  h = Math.round((h * maxDim) / w);
+                  w = maxDim;
+                } else {
+                  w = Math.round((w * maxDim) / h);
+                  h = maxDim;
+                }
+              }
 
-          const setor = document.getElementById('meta-setor').value || 'Tinturaria';
-          const agora = new Date();
-          const timestamp = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR');
-          const watermark = `[SSO AUDIT] ${timestamp} | ${norma} | ${setor}`;
+              const canvas = document.createElement('canvas');
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
 
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-          ctx.fillRect(0, h - 36, w, 36);
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 15px monospace';
-          ctx.fillText(watermark, 14, h - 12);
+              // Adicionar marca d'água técnica opcional na foto comprimida
+              ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+              ctx.fillRect(0, h - 28, w, 28);
+              ctx.fillStyle = "#ffffff";
+              ctx.font = "12px monospace";
+              ctx.fillText(`SETOR: ${setor} | ${timestamp}`, 10, h - 10);
 
-          const finalDataUrl = canvas.toDataURL('image/jpeg', 0.80);
-          respostas[id].fotoBase64 = finalDataUrl;
-
-          const box = document.getElementById('box_foto_' + id);
-          box.innerHTML = `<img src="${finalDataUrl}" alt="Evidência"><div class="watermark-text">${watermark}</div>`;
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+              const base64Data = canvas.toDataURL('image/jpeg', 0.85);
+              respostas[id].fotos.push(base64Data);
+              renderizarGaleria(id);
+              resolve();
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
     }
 
-    function calcularIndicadoresLocais() {
-      const itens = Object.values(respostas);
-      const auditados = itens.filter(i => i.status !== 'NA').length;
-      const conformes = itens.filter(i => i.status === 'C').length;
-      const naoConformes = itens.filter(i => i.status === 'NC').length;
-      const aderencia = auditados > 0 ? ((conformes / auditados) * 100).toFixed(1) : '100.0';
-
-      const porNorma = {};
-      itens.forEach(item => {
-        const n = item.norma || 'Geral';
-        if (!porNorma[n]) porNorma[n] = { total: 0, c: 0, nc: 0 };
-        if (item.status !== 'NA') {
-          porNorma[n].total += 1;
-          if (item.status === 'C') porNorma[n].c += 1;
-          if (item.status === 'NC') porNorma[n].nc += 1;
-        }
+    function renderizarGaleria(id) {
+      const galeria = document.getElementById(`galeria_${id}`);
+      galeria.innerHTML = '';
+      respostas[id].fotos.forEach((foto, index) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb-container';
+        thumb.innerHTML = `
+          <img src="${foto}" alt="Evidência">
+          <button type="button" class="thumb-remove" onclick="removerFoto('${id}', ${index})">×</button>
+        `;
+        galeria.appendChild(thumb);
       });
+    }
 
-      const titulosNorma = {
-        'NR-23': 'NR-23 – Proteção Contra Incêndios',
-        'NR-12': 'NR-12 – Segurança em Máquinas e Equipamentos',
-        'NR-11': 'NR-11 – Transporte, Movimentação e Armazenagem',
-        'NR-10': 'NR-10 – Instalações e Serviços em Eletricidade',
-        'NR-8': 'NR-08 – Edificações e Estruturas Prediais',
-        'ARMAZENAGEM': 'Armazenagem e Químicos (ISO 14001 / NR-26)',
-        'NR-6': 'NR-06 – Equipamentos de Proteção Individual (EPI)'
-      };
-
-      const tabelaNormas = Object.keys(porNorma).map(norma => {
-        const d = porNorma[norma];
-        const tx = d.total > 0 ? ((d.c / d.total) * 100).toFixed(1) : '100.0';
-        let risco = 'Baixo';
-        let riscoClass = 'risk-ba';
-
-        if (parseFloat(tx) < 50.0) {
-          risco = 'Crítico'; riscoClass = 'risk-cr';
-        } else if (parseFloat(tx) < 70.0) {
-          risco = 'Alto'; riscoClass = 'risk-al';
-        } else if (parseFloat(tx) < 90.0) {
-          risco = 'Médio'; riscoClass = 'risk-me';
-        }
-
-        return {
-          norma: titulosNorma[norma] || norma,
-          total: d.total,
-          c: d.c,
-          nc: d.nc,
-          aderencia: tx,
-          risco,
-          riscoClass
-        };
-      });
-
-      tabelaNormas.sort((a, b) => parseFloat(a.aderencia) - parseFloat(b.aderencia));
-
-      let nivelRiscoGeral = 'BAIXO';
-      let textoDiagnostico = 'A aderência regulatória atende aos padrões satisfatórios estabelecidos pelo SGI. Manter a rotina de manutenções preventivas e inspeções periódicas.';
-
-      const adNum = parseFloat(aderencia);
-      if (adNum < 60.0) {
-        nivelRiscoGeral = 'CRÍTICO';
-        textoDiagnostico = `A taxa de não conformidade de ${(100 - adNum).toFixed(1)}% aponta vulnerabilidade severa nos setores inspecionados. Há risco imediato de acidentes de alto impacto e embargo legal. Priorizar intervenções em máquinas (NR-12), combate a incêndio (NR-23) e armazenagem (NR-11).`;
-      } else if (adNum < 85.0) {
-        nivelRiscoGeral = 'ALTO';
-        textoDiagnostico = `Taxa de aderência intermediária (${aderencia}%). Foram apontadas não conformidades com risco operacional moderado/alto. Recomenda-se a emissão imediata dos planos de ação aos responsáveis.`;
-      }
-
-      return {
-        auditados,
-        conformes,
-        pctConformes: auditados > 0 ? ((conformes / auditados) * 100).toFixed(1) : '100.0',
-        naoConformes,
-        pctNaoConformes: auditados > 0 ? ((naoConformes / auditados) * 100).toFixed(1) : '0.0',
-        aderencia,
-        nivelRiscoGeral,
-        textoDiagnostico,
-        tabelaNormas
-      };
+    function removerFoto(id, index) {
+      respostas[id].fotos.splice(index, 1);
+      renderizarGaleria(id);
     }
 
     function atualizarPainelKPI() {
-      const kpis = calcularIndicadoresLocais();
-      document.getElementById('kpi-score-val').textContent = `${kpis.aderencia}%`;
-      document.getElementById('kpi-nc-count').textContent = kpis.naoConformes;
-      
-      const badge = document.getElementById('kpi-live');
-      if (parseFloat(kpis.aderencia) < 50) {
-        badge.style.background = '#dc2626';
-      } else if (parseFloat(kpis.aderencia) < 80) {
-        badge.style.background = '#d97706';
-      } else {
-        badge.style.background = 'rgba(255, 255, 255, 0.15)';
-      }
-    }
+      let totalC = 0;
+      let totalNC = 0;
+      let totalNA = 0;
+      let totalValidaveis = 0;
 
-    // ==========================================
-    // MOTOR DE GERAÇÃO DEFINITIVO (100% BLINDADO)
-    // ==========================================
-    function gerarRelatorioPDFExecutivo() {
-      const unidade = document.getElementById('meta-unidade').value || 'Americana';
-      const setor = document.getElementById('meta-setor').value || 'Tinturaria';
-      const dataInspecao = document.getElementById('meta-data').value || '2026-09-02';
-      const inspetor = document.getElementById('meta-inspetor').value || 'Lucas Zanes (TST)';
-      
-      const kpis = calcularIndicadoresLocais();
-      const itensNC = Object.values(respostas).filter(i => i.status === 'NC');
-      const container = document.getElementById('relatorio-print-container');
-
-      // 1. Tabela de Normas
-      const linhasNormas = kpis.tabelaNormas.map(t => `
-        <tr>
-          <td>${t.norma}</td>
-          <td class="text-center">${t.total}</td>
-          <td class="text-center">${t.c}</td>
-          <td class="text-center" style="color: ${t.nc > 0 ? '#dc2626' : '#334155'}; font-weight: ${t.nc > 0 ? '700' : '400'};">${t.nc}</td>
-          <td class="text-center" style="font-weight: 700; color: ${parseFloat(t.aderencia) < 70 ? '#dc2626' : '#2e7d32'};">${t.aderencia}%</td>
-          <td class="text-center"><span class="${t.riscoClass}">${t.risco}</span></td>
-        </tr>
-      `).join('');
-
-      // 2. Caderno de Evidências Fotográficas
-      let blocosEvidencias = '';
-      if (itensNC.length === 0) {
-        blocosEvidencias = `
-          <div class="pdf-sheet">
-            <div>
-              <div class="pdf-top-badge">Caderno Visual de Auditoria</div>
-              <h1 class="pdf-main-title">Apontamentos e Evidências Fotográficas</h1>
-              <div style="padding: 50px 20px; text-align: center; color: #16a34a; font-weight: 700; font-size: 14pt; border: 2px dashed #16a34a; border-radius: 8px; margin-top: 20px;">
-                ✓ Nenhuma não conformidade detectada na inspeção realizada.<br>
-                <span style="font-size: 10pt; color: #64748b; font-weight: normal;">Todos os requisitos auditados encontram-se em conformidade regulamentar.</span>
-              </div>
-            </div>
-            <div class="pdf-sheet-footer">
-              <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243</span>
-              <span>Página 2</span>
-            </div>
-          </div>
-        `;
-      } else {
-        // 2 fotos por página A4 Paisagem
-        for (let i = 0; i < itensNC.length; i += 2) {
-          const lote = itensNC.slice(i, i + 2);
-          const paginaNum = Math.floor(i / 2) + 2;
-
-          blocosEvidencias += `
-            <div class="pdf-sheet">
-              <div>
-                <div class="pdf-top-badge">Caderno Visual de Auditoria</div>
-                <h1 class="pdf-main-title" style="margin-bottom: 12px;">Apontamentos e Evidências Fotográficas</h1>
-
-                ${lote.map(item => `
-                  <div class="pdf-nc-block">
-                    <div class="pdf-nc-header">
-                      <span>${item.norma} – ${item.pergunta}</span>
-                      <span style="color: #dc2626; font-weight: 800;">NÃO CONFORME</span>
-                    </div>
-                    <div class="pdf-nc-body">
-                      <div class="pdf-img-box">
-                        ${item.fotoBase64 ? `<img src="${item.fotoBase64}" alt="Evidência">` : '<div style="color: #94a3b8; font-size: 8.5pt;">Foto não anexada</div>'}
-                      </div>
-                      <div>
-                        <strong style="color: #475569; font-size: 8pt; text-transform: uppercase;">Desvio Constatado (Observações):</strong>
-                        <div class="pdf-nc-desc">${item.desvio || 'Desvio não descrito pelo inspetor.'}</div>
-
-                        <strong style="color: #475569; font-size: 8pt; text-transform: uppercase;">Ação Corretiva Proposta:</strong>
-                        <table class="pdf-action-table">
-                          <tr>
-                            <th style="width: 55%;">Ação Corretiva</th>
-                            <th style="width: 25%;">Responsável</th>
-                            <th style="width: 20%;">Prazo</th>
-                          </tr>
-                          <tr>
-                            <td>${item.acao || 'A regularizar.'}</td>
-                            <td>${item.responsavel || 'Setorial'}</td>
-                            <td><strong>${item.prazo || '30/09/2026'}</strong></td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-
-              <div class="pdf-sheet-footer">
-                <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243</span>
-                <span>Página ${paginaNum}</span>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      // Montagem do Relatório Completo
-      container.innerHTML = `
-        <!-- PÁGINA 1: DASHBOARD EXECUTIVO (IDÊNTICO À IMAGEM) -->
-        <div class="pdf-sheet">
-          <div>
-            <div class="pdf-top-badge">Auditoria Integrada de Segurança do Trabalho</div>
-            <h1 class="pdf-main-title">Painel de Indicadores de Segurança (KPIs)</h1>
-
-            <div class="pdf-kpi-grid">
-              <div class="pdf-card card-c1">
-                <div class="pdf-card-label">Requisitos Auditados</div>
-                <div class="pdf-card-val val-c1">${kpis.auditados}</div>
-                <div class="pdf-card-sub">Itens avaliados no FO14243</div>
-              </div>
-              <div class="pdf-card card-c2">
-                <div class="pdf-card-label">Conformidades</div>
-                <div class="pdf-card-val val-c2">${kpis.conformes}</div>
-                <div class="pdf-card-sub">${kpis.pctConformes}% de atendimento</div>
-              </div>
-              <div class="pdf-card card-c3">
-                <div class="pdf-card-label">Não Conformidades</div>
-                <div class="pdf-card-val val-c3">${kpis.naoConformes}</div>
-                <div class="pdf-card-sub">${kpis.pctNaoConformes}% de desvios críticos</div>
-              </div>
-              <div class="pdf-card card-c4">
-                <div class="pdf-card-label">Aderência Regulatória</div>
-                <div class="pdf-card-val val-c4">${kpis.aderencia}%</div>
-                <div class="pdf-card-sub">Meta SGI: ≥ 90,0%</div>
-              </div>
-            </div>
-
-            <div class="pdf-diag-box">
-              <div class="pdf-diag-title">DIAGNÓSTICO TÉCNICO DE RISCO: ${kpis.nivelRiscoGeral}</div>
-              <div class="pdf-diag-text">${kpis.textoDiagnostico}</div>
-            </div>
-
-            <table class="pdf-nr-table">
-              <thead>
-                <tr>
-                  <th>Norma Regulamentadora / Tema</th>
-                  <th class="text-center" style="width: 10%;">Total</th>
-                  <th class="text-center" style="width: 12%;">Conforme</th>
-                  <th class="text-center" style="width: 12%;">Não Conf.</th>
-                  <th class="text-center" style="width: 14%;">Aderência (%)</th>
-                  <th class="text-center" style="width: 14%;">Nível de Risco</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${linhasNormas}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="pdf-sheet-footer">
-            <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243 | Inspetor: ${inspetor}</span>
-            <span>Página 1</span>
-          </div>
-        </div>
-
-        <!-- PÁGINAS SEGUINTES: CADERNO DE FOTOS -->
-        ${blocosEvidencias}
-      `;
-
-      // 3. Define o título da página para virar o nome padrão do PDF ao salvar
-      const tituloOriginal = document.title;
-      document.title = `Relatorio_SSO_FO14243_${setor}_${dataInspecao}`;
-
-      // 4. Dispara a janela de geração em PDF nativa (A4 Paisagem, 100% nítida e sem falhas)
-      window.print();
-
-      // Restaura o título da página
-      document.title = tituloOriginal;
-    }
-
-    window.onload = renderizarChecklist;
-  </script>
-</body>
-</html>
+      Object.values(respostas).forEach(item => {
+        if (item.status === 'C') {
+          totalC++;
+          totalValidaveis++;
+        } else if (item.status === 'NC') {
+          totalNC++;
+          total
