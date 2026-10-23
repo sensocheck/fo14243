@@ -1151,4 +1151,230 @@
           totalValidaveis++;
         } else if (item.status === 'NC') {
           totalNC++;
-          total
+          totalValidaveis++;
+        } else if (item.status === 'NA') {
+          totalNA++;
+        }
+      });
+
+      const score = totalValidaveis > 0 ? Math.round((totalC / totalValidaveis) * 100) : 100;
+      document.getElementById('kpi-score-val').innerText = score + '%';
+      document.getElementById('kpi-nc-count').innerText = totalNC;
+    }
+
+    function gerarRelatorioPDFExecutivo() {
+      const unidade = document.getElementById('meta-unidade').value;
+      const setor = document.getElementById('meta-setor').value;
+      const dataInsp = document.getElementById('meta-data').value;
+      const inspetor = document.getElementById('meta-inspetor').value || 'Não informado';
+
+      let totalC = 0, totalNC = 0, totalNA = 0, totalValidaveis = 0;
+      const listaNCs = [];
+
+      Object.values(respostas).forEach(item => {
+        if (item.status === 'C') { totalC++; totalValidaveis++; }
+        else if (item.status === 'NC') {
+          totalNC++;
+          totalValidaveis++;
+          listaNCs.push(item);
+        }
+        else if (item.status === 'NA') { totalNA++; }
+      });
+
+      const score = totalValidaveis > 0 ? Math.round((totalC / totalValidaveis) * 100) : 100;
+
+      const containerPrint = document.getElementById('relatorio-print-container');
+      containerPrint.innerHTML = '';
+
+      // --- FOLHA 1: Sumário e Indicadores ---
+      const folha1 = document.createElement('div');
+      folha1.className = 'pdf-sheet';
+      folha1.innerHTML = `
+        <div>
+          <div class="pdf-top-badge">Relatório Executivo de Auditoria de Segurança</div>
+          <div class="pdf-main-title">Formulário FO14243 – ${unidade} / ${setor}</div>
+          
+          <div class="pdf-kpi-grid">
+            <div class="pdf-card card-c1">
+              <div class="pdf-card-label">Aderência Global</div>
+              <div class="pdf-card-val val-c1">${score}%</div>
+              <div class="pdf-card-sub">Conforme normas</div>
+            </div>
+            <div class="pdf-card card-c2">
+              <div class="pdf-card-label">Itens Conformes (C)</div>
+              <div class="pdf-card-val val-c2">${totalC}</div>
+              <div class="pdf-card-sub">Atendem plenamente</div>
+            </div>
+            <div class="pdf-card card-c3">
+              <div class="pdf-card-label">Não Conformes (NC)</div>
+              <div class="pdf-card-val val-c3">${totalNC}</div>
+              <div class="pdf-card-sub">Requerem correção</div>
+            </div>
+            <div class="pdf-card card-c4">
+              <div class="pdf-card-label">Não Aplicáveis (NA)</div>
+              <div class="pdf-card-val val-c4">${totalNA}</div>
+              <div class="pdf-card-sub">Fora de escopo</div>
+            </div>
+          </div>
+
+          <div class="pdf-diag-box">
+            <div class="pdf-diag-title">Diagnóstico de Segurança do Trabalho</div>
+            <div class="pdf-diag-text">
+              Inspeção realizada em <strong>${dataInsp}</strong> sob responsabilidade de <strong>${inspetor}</strong>. 
+              Foram identificados <strong>${totalNC}</strong> desvios normativos que necessitam de intervenção imediata conforme plano de ação detalhado nas páginas seguintes.
+            </div>
+          </div>
+
+          <table class="pdf-nr-table">
+            <thead>
+              <tr>
+                <th>Parâmetro de Identificação</th>
+                <th>Detalhes do Registro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Unidade / Local</strong></td><td>${unidade} - ${setor}</td></tr>
+              <tr><td><strong>Data da Inspeção</strong></td><td>${dataInsp}</td></tr>
+              <tr><td><strong>Inspetor Responsável</strong></td><td>${inspetor}</td></tr>
+              <tr><td><strong>Total de NCs Registradas</strong></td><td>${totalNC} ocorrência(s)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pdf-sheet-footer">
+          <span>FO14243 - Sistema de Gestão de Segurança</span>
+          <span>Página 1</span>
+        </div>
+      `;
+      containerPrint.appendChild(folha1);
+
+      // --- FOLHAS DE EVIDÊNCIAS (Caderno de Fotos) ---
+      if (listaNCs.length > 0) {
+        listaNCs.forEach((nc, idx) => {
+          const folhaNc = document.createElement('div');
+          folhaNc.className = 'pdf-sheet';
+
+          let imagensHtml = '';
+          if (nc.fotos && nc.fotos.length > 0) {
+            imagensHtml = nc.fotos.map(foto => `
+              <div class="pdf-img-box">
+                <img src="${foto}" alt="Evidência Fotográfica">
+              </div>
+            `).join('');
+          } else {
+            imagensHtml = `<div style="font-size:8pt; color:#64748b; font-style:italic; padding:10px;">Nenhuma evidência fotográfica anexada para este item.</div>`;
+          }
+
+          folhaNc.innerHTML = `
+            <div>
+              <div class="pdf-top-badge">Caderno de Evidências Fotográficas (Item ${idx + 1} de ${listaNCs.length})</div>
+              <div class="pdf-nc-block">
+                <div class="pdf-nc-header">
+                  <span>Norma: <strong>${nc.norma}</strong></span>
+                  <span style="color: #dc2626;">STATUS: NÃO CONFORME (NC)</span>
+                </div>
+                <div class="pdf-nc-body">
+                  <div style="font-size: 8.5pt; font-weight:700; margin-bottom: 6px; color: #0b1a30;">${nc.pergunta}</div>
+                  
+                  <div class="pdf-img-grid-print">
+                    ${imagensHtml}
+                  </div>
+
+                  <div class="pdf-nc-desc">
+                    <strong>Desvio Constatado:</strong> ${nc.desvio || 'Nenhuma observação detalhada informada.'}
+                  </div>
+
+                  <table class="pdf-action-table" style="margin-top: 6px;">
+                    <tr>
+                      <th style="width: 50%;">Ação Corretiva Proposta</th>
+                      <th style="width: 25%;">Responsável</th>
+                      <th style="width: 25%;">Prazo Limite</th>
+                    </tr>
+                    <tr>
+                      <td>${nc.acao || 'Não especificada'}</td>
+                      <td>${nc.responsavel || 'Não informado'}</td>
+                      <td>${nc.prazo || '-'}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="pdf-sheet-footer">
+              <span>FO14243 - Sistema de Gestão de Segurança</span>
+              <span>Página ${idx + 2}</span>
+            </div>
+          `;
+          containerPrint.appendChild(folhaNc);
+        });
+      }
+
+      // --- ÚLTIMA FOLHA: Tabela Consolidada do Plano de Ação ---
+      const folhaPlano = document.createElement('div');
+      folhaPlano.className = 'pdf-sheet';
+      
+      let linhasTabelaPlano = '';
+      if (listaNCs.length > 0) {
+        listaNCs.forEach((nc, index) => {
+          linhasTabelaPlano += `
+            <tr>
+              <td class="text-center">${index + 1}</td>
+              <td><strong>${nc.norma}</strong><br><span style="font-size:7pt; color:#475569;">${nc.pergunta}</span></td>
+              <td>${nc.desvio || 'Não detalhado'}</td>
+              <td>${nc.acao || 'Não informada'}</td>
+              <td>${nc.responsavel || 'Não atribuído'}</td>
+              <td class="text-center">${nc.prazo || '-'}</td>
+            </tr>
+          `;
+        });
+      } else {
+        linhasTabelaPlano = `
+          <tr>
+            <td colspan="6" class="text-center" style="padding: 20px; color: #16a34a; font-weight: bold;">
+              Nenhuma Não Conformidade registrada nesta inspeção. Parabéns à equipe!
+            </td>
+          </tr>
+        `;
+      }
+
+      folhaPlano.innerHTML = `
+        <div>
+          <div class="pdf-top-badge">Consolidado Final</div>
+          <div class="pdf-main-title">Plano de Ação Corretiva - Auditoria FO14243</div>
+          
+          <div style="font-size: 8pt; color: #475569; margin-bottom: 10px;">
+            A tabela abaixo consolida todas as ações corretivas geradas a partir das não conformidades apontadas durante a inspeção no setor de <strong>${setor}</strong> (${unidade}):
+          </div>
+
+          <table class="pdf-action-table">
+            <thead>
+              <tr>
+                <th style="width: 5%;">Item</th>
+                <th style="width: 22%;">Norma / Pergunta</th>
+                <th style="width: 25%;">Desvio Encontrado</th>
+                <th style="width: 25%;">Ação Corretiva Proposta</th>
+                <th style="width: 13%;">Responsável</th>
+                <th style="width: 10%;" class="text-center">Prazo</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${linhasTabelaPlano}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pdf-sheet-footer">
+          <span>FO14243 - Sistema de Gestão de Segurança</span>
+          <span>Página ${listaNCs.length + 2}</span>
+        </div>
+      `;
+      containerPrint.appendChild(folhaPlano);
+
+      // Dispara a impressão nativa do navegador (para salvar em PDF Paisagem)
+      window.print();
+    }
+
+    window.onload = renderizarChecklist;
+  </script>
+</body>
+</html>
