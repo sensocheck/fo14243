@@ -561,7 +561,7 @@
         line-height: 1.35;
       }
 
-      /* Tabela de NRs */
+      /* Tabela Geral */
       .pdf-nr-table {
         width: 100%;
         border-collapse: collapse;
@@ -667,6 +667,36 @@
         background: #f8fafc !important;
         color: #475569;
         text-align: left;
+      }
+
+      /* Tabela Consolidada do Plano de Ação */
+      .pdf-plano-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8pt;
+        margin-top: 10px;
+      }
+
+      .pdf-plano-table thead tr {
+        background-color: #1a365d !important;
+        color: #ffffff !important;
+      }
+
+      .pdf-plano-table th {
+        padding: 7px 8px;
+        font-weight: 700;
+        text-align: left;
+        border: 1px solid #0b1a30;
+      }
+
+      .pdf-plano-table td {
+        padding: 6px 8px;
+        border: 1px solid #cbd5e1;
+        vertical-align: top;
+      }
+
+      .pdf-plano-table tr:nth-child(even) {
+        background-color: #f8fafc !important;
       }
 
       .pdf-sheet-footer {
@@ -1156,7 +1186,7 @@
     }
 
     // ==========================================
-    // MOTOR DE GERAÇÃO DEFINITIVO 
+    // MOTOR DE GERAÇÃO DEFINITIVO (COM PLANO DE AÇÃO)
     // ==========================================
     function gerarRelatorioPDFExecutivo() {
       const unidade = document.getElementById('meta-unidade').value || 'Americana';
@@ -1180,7 +1210,58 @@
         </tr>
       `).join('');
 
-      // 2. Caderno de Evidências Fotográficas
+      // 2. Tabela Consolidada do Plano de Ação
+      let tabelaPlanoAcaoHtml = '';
+      if (itensNC.length > 0) {
+        const linhasPlano = itensNC.map((item, idx) => `
+          <tr>
+            <td class="text-center" style="font-weight: 700;">${idx + 1}</td>
+            <td style="font-weight: 700; color: #0b1a30;">${item.norma}</td>
+            <td>
+              <strong>${item.pergunta}</strong>
+              <div style="color: #dc2626; font-size: 7.5pt; margin-top: 2px;">Desvio: ${item.desvio || 'Não detalhado.'}</div>
+            </td>
+            <td>${item.acao || 'Ação corretiva pendente de definição.'}</td>
+            <td>${item.responsavel || 'Setorial / Manutenção'}</td>
+            <td class="text-center" style="font-weight: 700; color: #1e3a8a;">${item.prazo || '30/09/2026'}</td>
+          </tr>
+        `).join('');
+
+        tabelaPlanoAcaoHtml = `
+          <div class="pdf-sheet">
+            <div>
+              <div class="pdf-top-badge">Matriz de Gestão de Riscos & Segurança</div>
+              <h1 class="pdf-main-title">Plano de Ação Corretiva Consolidado</h1>
+              <p style="font-size: 8pt; color: #64748b; margin-bottom: 10px;">
+                Tabela sintética contendo as diretrizes de regularização, responsáveis indicados e prazos limite definidos durante a inspeção.
+              </p>
+
+              <table class="pdf-plano-table">
+                <thead>
+                  <tr>
+                    <th style="width: 4%; text-align: center;">#</th>
+                    <th style="width: 12%;">Norma</th>
+                    <th style="width: 32%;">Item Auditado & Desvio Detectado</th>
+                    <th style="width: 28%;">Ação Corretiva Recomendada</th>
+                    <th style="width: 14%;">Responsável</th>
+                    <th style="width: 10%; text-align: center;">Prazo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${linhasPlano}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pdf-sheet-footer">
+              <span>Unidade: ${unidade} | Setor: ${setor} | Formulário: FO14243</span>
+              <span>Plano de Ação</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Caderno de Evidências Fotográficas
       let blocosEvidencias = '';
       if (itensNC.length === 0) {
         blocosEvidencias = `
@@ -1203,7 +1284,7 @@
         // 2 fotos por página A4 Paisagem
         for (let i = 0; i < itensNC.length; i += 2) {
           const lote = itensNC.slice(i, i + 2);
-          const paginaNum = Math.floor(i / 2) + 2;
+          const paginaNum = Math.floor(i / 2) + 3;
 
           blocosEvidencias += `
             <div class="pdf-sheet">
@@ -1255,7 +1336,7 @@
 
       // Montagem do Relatório Completo
       container.innerHTML = `
-        <!-- PÁGINA 1: DASHBOARD EXECUTIVO  -->
+        <!-- PÁGINA 1: DASHBOARD EXECUTIVO -->
         <div class="pdf-sheet">
           <div>
             <div class="pdf-top-badge">Auditoria Integrada de Segurança do Trabalho</div>
@@ -1312,19 +1393,22 @@
           </div>
         </div>
 
+        <!-- PÁGINA 2: PLANO DE AÇÃO CONSOLIDADO -->
+        ${tabelaPlanoAcaoHtml}
+
         <!-- PÁGINAS SEGUINTES: CADERNO DE FOTOS -->
         ${blocosEvidencias}
       `;
 
-      // 3. Define o título da página para virar o nome padrão do PDF ao salvar
+      // Define o título da página para virar o nome padrão do PDF ao salvar
       const tituloOriginal = document.title;
       document.title = `Relatorio_SSO_FO14243_${setor}_${dataInspecao}`;
 
-      // 4. Dispara a janela de geração em PDF nativa (A4 Paisagem, 100% nítida e sem falhas)
-      window.print();
-
-      // Restaura o título da página
-      document.title = tituloOriginal;
+      // Dispara a impressão em PDF após renderização
+      setTimeout(() => {
+        window.print();
+        document.title = tituloOriginal;
+      }, 200);
     }
 
     window.onload = renderizarChecklist;
